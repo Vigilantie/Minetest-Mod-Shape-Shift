@@ -1,0 +1,15 @@
+# If enabled, each mob you shape shift into will change your health
+# based on the original mob's max health.
+mob_health (Enable Changing Health) bool true
+
+# If enabled, each mob you shape shift into will change your speed
+# based on the original mob's speed, or what I thought was good.
+mob_speed (Enable Changing Speed) bool true
+
+# If enabled, each mob you shape shift into will change your max breath
+# based on the original mob's breath, or what I thought was good.
+mob_breath (Enable Changing Breath) bool true
+
+# If enabled, each mob you shape shift into will change your gravity
+# based on the original mob's gravity, or what I thought was good.
+mob_gravity (Enable Changing Gravity) bool true
