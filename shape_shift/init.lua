@@ -13,6 +13,7 @@ local gravity_setting = minetest.settings:get_bool("mob_gravity", true)
 local mobs_animal = minetest.get_modpath("mobs_animal")
 local animalia = minetest.get_modpath("animalia")
 local mobs_monster = minetest.get_modpath("mobs_monster")
+local nssm = minetest.get_modpath("nssm")
 
 -- Making the privledge
 minetest.register_privilege("shape_shift", {
@@ -20,8 +21,11 @@ minetest.register_privilege("shape_shift", {
 })
 
 --[[
-TODO: Add compatibility for mobs_skeletons, mob_mese_monster, and nssm
-TODO: Add a chatcommand that allows admins to change the apearence of other players (Maybe)
+TODO:
+    - Fix the speed bug
+    - Add compatibility for mob_mese_monster
+    - Add compatibility for nssm only problem is, the models are facing the wrong way, Need to figure out how to rotate the model via code.
+    - Add a chatcommand that allows admins to change the apearence of other players (Maybe)
 ]]
 
 local valid_characters = {
@@ -29,47 +33,58 @@ local valid_characters = {
     help = true,
     showname = true,
     hidename = true,
-    bee = true,
-    bunny = true,
-    chicken = true,
-    cow = true,
-    kitten = true,
-    rat = true,
-    panda = true,
-    penguin = true,
-    pumba = true,
-    --Animalia
-    bear = true,
-    cat = true,
-    chicken1 = true,
-    cow1 = true,
-    fox = true,
-    frog = true,
-    bullfrog = true,
-    dartfrog = true,
-    horse = true,
-    opossum = true,
-    owl = true,
-    pig = true,
-    mouse = true,
-    reindeer = true,
-    sheep = true,
-    clownfish = true,
-    angelfish = true,
-    turkey = true,
-    wolf = true,
-    bird = true,
-    dirtmonster = true,
-    dungeonmaster = true,
-    landguard = true,
-    lavaflan = true,
-    mesemonster = true,
-    oerkki = true,
-    sandmonster = true,
-    spider = true,
-    stonemonster = true,
-    treemonster = true,
 }
+
+-- Mobs Animal
+if mobs_animal then
+    valid_characters.bee = true
+    valid_characters.bunny = true
+    valid_characters.chicken = true
+    valid_characters.cow = true
+    valid_characters.kitten = true
+    valid_characters.rat = true
+    valid_characters.panda = true
+    valid_characters.penguin = true
+    valid_characters.pumba = true
+end
+
+--Animalia
+if animalia then
+    valid_characters.bear = true
+    valid_characters.cat = true
+    valid_characters.chicken1 = true
+    valid_characters.cow1 = true
+    valid_characters.fox = true
+    valid_characters.frog = true
+    valid_characters.bullfrog = true
+    valid_characters.dartfrog = true
+    valid_characters.horse = true
+    valid_characters.opossum = true
+    valid_characters.owl = true
+    valid_characters.pig = true
+    valid_characters.mouse = true
+    valid_characters.reindeer = true
+    valid_characters.sheep = true
+    valid_characters.clownfish = true
+    valid_characters.angelfish = true
+    valid_characters.turkey = true
+    valid_characters.wolf = true
+    valid_characters.bird = true
+end
+
+-- Mobs Monster
+if mobs_monster then
+    valid_characters.dirtmonster = true
+    valid_characters.dungeonmaster = true
+    valid_characters.landguard = true
+    valid_characters.lavaflan = true
+    valid_characters.mesemonster = true
+    valid_characters.oerkki = true
+    valid_characters.sandmonster = true
+    valid_characters.spider = true
+    valid_characters.stonemonster = true
+    valid_characters.treemonster = true
+end
 
 local character_textures = {
     -- Mobs Animal
@@ -174,6 +189,7 @@ local character_health = {
     spider = 30,
     stonemonster = 35,
     treemonster = 40,
+    -- NSSM
 }
 
 local bird_characters = {
@@ -248,6 +264,19 @@ minetest.register_chatcommand("ss", {
                 characteristics()
                 player:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
                 return true, "You are now normal again!"
+            elseif subcmd == "hidename" then
+                player:set_nametag_attributes({color = {a = 0, r = 255, g = 255, b = 255}})
+            elseif subcmd == "showname" then
+                player:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
+            elseif subcmd == "help" then
+                minetest.chat_send_player(name, "Default Command: normal")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Mobs Animal: bee, bunny, chicken, cow, kitten, panda, penguin, rat, warthog, pumba")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Animalia: bear, cat, chicken1, cow1, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Mobs Monster: dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster")
+                minetest.chat_send_player(name, " ")
             -- Mobs Animal
             elseif subcmd == "bee" and mobs_animal then
                 player_api.set_model(player, "mobs_bee.b3d")
@@ -411,19 +440,6 @@ minetest.register_chatcommand("ss", {
                 player_api.set_model(player, "mobs_tree_monster.b3d")
                 characteristics()
                 return true, "You are now a Tree Monster!"
-            elseif subcmd == "hidename" then
-                player:set_nametag_attributes({color = {a = 0, r = 255, g = 255, b = 255}})
-            elseif subcmd == "showname" then
-                player:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
-            elseif subcmd == "help" then
-                minetest.chat_send_player(name, "Default Command: normal")
-                minetest.chat_send_player(name, " ")
-                minetest.chat_send_player(name, "Mobs Animal: bee, bunny, chicken, cow, kitten, panda, penguin, rat, warthog, pumba")
-                minetest.chat_send_player(name, " ")
-                minetest.chat_send_player(name, "Animalia: bear, cat, chicken1, cow1, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird")
-                minetest.chat_send_player(name, " ")
-                minetest.chat_send_player(name, "Mobs Monster: dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster")
-                minetest.chat_send_player(name, " ")
             else
                 return false, "Unknown subcommand or mobs_animal mod not enabled. Usage: /ss"
             end

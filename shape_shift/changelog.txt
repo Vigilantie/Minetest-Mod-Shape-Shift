@@ -1,6 +1,9 @@
-Initial Relese: June 22, 2025
-Version 1.0.0
+v1.0.2 (24th Jun 2025):
+    - Fixed bug when you shape shift into a mob when that mod is not enabled on your world
 
-Update: June 23, 2025
-Version: 1.0.1
-Note: Upgraded chat message telling you what you transformed into, and added help commands
+
+v1.0.1 (23th Jun 2025):
+    -  Upgraded chat message telling you what you transformed into.
+    - Added a help command
+
+Initial Relese (22th Jun 2025)
