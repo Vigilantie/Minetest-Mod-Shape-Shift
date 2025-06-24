@@ -24,6 +24,53 @@ TODO: Add compatibility for mobs_skeletons, mob_mese_monster, and nssm
 TODO: Add a chatcommand that allows admins to change the apearence of other players (Maybe)
 ]]
 
+local valid_characters = {
+    normal = true,
+    help = true,
+    showname = true,
+    hidename = true,
+    bee = true,
+    bunny = true,
+    chicken = true,
+    cow = true,
+    kitten = true,
+    rat = true,
+    panda = true,
+    penguin = true,
+    pumba = true,
+    --Animalia
+    bear = true,
+    cat = true,
+    chicken1 = true,
+    cow1 = true,
+    fox = true,
+    frog = true,
+    bullfrog = true,
+    dartfrog = true,
+    horse = true,
+    opossum = true,
+    owl = true,
+    pig = true,
+    mouse = true,
+    reindeer = true,
+    sheep = true,
+    clownfish = true,
+    angelfish = true,
+    turkey = true,
+    wolf = true,
+    bird = true,
+    dirtmonster = true,
+    dungeonmaster = true,
+    landguard = true,
+    lavaflan = true,
+    mesemonster = true,
+    oerkki = true,
+    sandmonster = true,
+    spider = true,
+    stonemonster = true,
+    treemonster = true,
+}
+
 local character_textures = {
     -- Mobs Animal
     bee = {"mobs_bee.png"},
@@ -140,7 +187,7 @@ local had_fly_priv = {}
 -- The chat command
 minetest.register_chatcommand("ss", {
     params = "<ss> [mob]",
-    description = "possible subcommands: normal, bee, bunny, chicken, chicken1, cow, cow1, kitten, panda, penguin, rat, warthog, pumba, bear, cat, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird, dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster",
+    description = "Possible Subcommands: normal, -------Mobs Animal: bee, bunny, chicken, cow, kitten, panda, penguin, rat, warthog, pumba, -------Animalia: bear, cat, chicken1, cow1, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird, -------Mobs Monster: dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster",
     privs = {shape_shift = true},
     func = function(name, param)
         local args = param:split(" ")
@@ -368,11 +415,23 @@ minetest.register_chatcommand("ss", {
                 player:set_nametag_attributes({color = {a = 0, r = 255, g = 255, b = 255}})
             elseif subcmd == "showname" then
                 player:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
+            elseif subcmd == "help" then
+                minetest.chat_send_player(name, "Default Command: normal")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Mobs Animal: bee, bunny, chicken, cow, kitten, panda, penguin, rat, warthog, pumba")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Animalia: bear, cat, chicken1, cow1, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird")
+                minetest.chat_send_player(name, " ")
+                minetest.chat_send_player(name, "Mobs Monster: dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster")
+                minetest.chat_send_player(name, " ")
             else
                 return false, "Unknown subcommand or mobs_animal mod not enabled. Usage: /ss"
             end
         end
 
+        if not valid_characters[subcmd] then
+            return false, "Unknown character."
+        end
         -- Fly priv stuff
         if bird_characters[subcmd] then
             -- Save if player already had fly
@@ -384,9 +443,10 @@ minetest.register_chatcommand("ss", {
                 privs.fly = true
                 minetest.set_player_privs(name, privs)
             end
-            player:set_nametag_attributes({ text = "" })
             mob_models()
-            return true, "You are now a bird!"
+            -- Send chat message after transformation
+            minetest.chat_send_player(name, "You are now a " .. player_current_character[name] .. "!")
+            return true
         else
             -- If we previously granted fly, revoke it
             if had_fly_priv[name] ~= nil and not had_fly_priv[name] then
@@ -394,9 +454,9 @@ minetest.register_chatcommand("ss", {
                 minetest.set_player_privs(name, privs)
             end
             had_fly_priv[name] = nil
-            player:set_nametag_attributes({ text = "" })
             mob_models()
-            return true, "You are now " .. subcmd .. "!"
+            minetest.chat_send_player(name, "You are now a " .. player_current_character[name] .. "!")
+            return true
         end
     end,
 })

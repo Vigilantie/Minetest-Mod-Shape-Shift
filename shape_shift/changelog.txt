@@ -1,0 +1,6 @@
+Initial Relese: June 22, 2025
+Version 1.0.0
+
+Update: June 23, 2025
+Version: 1.0.1
+Note: Upgraded chat message telling you what you transformed into, and added help commands
