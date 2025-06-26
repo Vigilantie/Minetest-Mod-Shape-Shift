@@ -203,7 +203,7 @@ local had_fly_priv = {}
 -- The chat command
 minetest.register_chatcommand("ss", {
     params = "<ss> [mob]",
-    description = "Possible Subcommands: normal, -------Mobs Animal: bee, bunny, chicken, cow, kitten, panda, penguin, rat, warthog, pumba, -------Animalia: bear, cat, chicken1, cow1, fox, frog, bullfrog, dartfrog, horse, opossum, pig, mouse, reindeer, sheep, clownfish, angelfish, turkey, wolf, bird, -------Mobs Monster: dirtmonster, dungeonmaster, landguard, mesemonster, lavaflan, mesemonster, oerkki, sandmonster, spider, stonemonster, treemonster",
+    description = "Do /ss help for a list of all the animals/monsters you can shape shift into.",
     privs = {shape_shift = true},
     func = function(name, param)
         local args = param:split(" ")
